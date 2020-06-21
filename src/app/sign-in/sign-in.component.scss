@@ -1,0 +1,22 @@
+.sign-in-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+
+  form {
+    width: 40%;
+
+    mat-form-field, button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .sign-in-container {
+    form {
+      width: 80%;
+    }
+  }
+}

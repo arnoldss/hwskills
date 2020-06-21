@@ -1,0 +1,43 @@
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 30px;
+
+  .study-form, .skill-form, .project-form {
+    width: 80%;
+    margin: 30px 0;
+  }
+
+  .skill-form, .project-form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80%;
+
+    .form-container, .skills-container, .projects-container {
+      width: 100%;
+    }
+
+    .skills-container, .projects-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      mat-card {
+        margin: 10px 10px;
+        width: 25%;
+
+        mat-card-actions {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+
+  form {
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

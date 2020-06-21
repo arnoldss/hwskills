@@ -1,0 +1,180 @@
+<div class="profile-container">
+  <div class="study-form">
+    <h1>Study</h1>
+    <mat-hint><strong>Highest Education Level</strong></mat-hint>
+
+    <form [formGroup]="studyForm" (ngSubmit)="onStudySubmit()">
+      <mat-form-field>
+        <mat-label>Institution Name</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Institution name"
+          formControlName="institutionName"
+        />
+
+        <!-- <mat-autocomplete #instNameAuto="matAutocomplete">
+          <mat-option *ngFor="let s of schools" [value]="s.name">
+            {{s.name}}
+          </mat-option>
+        </mat-autocomplete> -->
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input
+          matInput
+          placeholder="Ex. Systems Engineer"
+          formControlName="studyName"
+        />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Completition Date</mat-label>
+        <input
+          disabled
+          matInput
+          [matDatepicker]="picker"
+          formControlName="completionDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false" touchUi="true"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="countryCode">
+          <mat-option [value]="null">Select a value</mat-option>
+          <mat-option *ngFor="let country of countries" [value]="country.code">
+            {{ country.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!studyForm.valid">
+        Save changes
+      </button>
+    </form>
+  </div>
+
+  <div class="skill-form">
+    <div class="form-container">
+      <h1>Skills</h1>
+      <form
+        [formGroup]="skillForm"
+        (ngSubmit)="onAddSkill()">
+        <mat-form-field>
+          <mat-label>Skill Name</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Skill Name"
+            formControlName="name"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Skill Area</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Skill Area"
+            formControlName="area"
+          />
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!skillForm.valid">
+          Add Skill
+        </button>
+      </form>
+    </div>
+    <div class="skills-container">
+      <mat-card *ngFor="let skill of employee?.skills; let i = index">
+        <mat-card-header>
+          <mat-card-title>{{ skill.name }}</mat-card-title>
+          <mat-card-subtitle>{{ skill.area }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button (click)="onSkillDelete(i)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="project-form">
+    <div class="form-container">
+      <h1>Projects</h1>
+      <form [formGroup]="projectForm" (ngSubmit)="onProjectSubmit()">
+        <mat-form-field>
+          <mat-label>Customer</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Customer Name"
+            formControlName="customer"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Initial Date</mat-label>
+          <input
+            disabled
+            matInput
+            [matDatepicker]="initDatePicker"
+            formControlName="initialDate">
+          <mat-datepicker-toggle matSuffix [for]="initDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #initDatePicker disabled="false" touchUi="true"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Completion Date</mat-label>
+          <input
+            disabled
+            matInput
+            [matDatepicker]="completionDatePicker"
+            formControlName="completionDate">
+          <mat-datepicker-toggle matSuffix [for]="completionDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #completionDatePicker disabled="false" touchUi="true"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Role</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Role"
+            formControlName="role"
+          />
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!projectForm.valid">
+          Add Project
+        </button>
+      </form>
+    </div>
+    <div class="projects-container">
+      <mat-card *ngFor="let project of employee?.projects; let i = index">
+        <mat-card-header>
+          <mat-card-title>{{ project.customer }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ (project.initialDate | date:'mediumDate') + ' | ' + (project.completionDate | date:'mediumDate') }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button (click)="onProjectDelete(i)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

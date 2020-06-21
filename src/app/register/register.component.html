@@ -1,0 +1,120 @@
+<div class="register-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="employee-data" formGroupName="employee">
+      <mat-form-field>
+        <mat-label>Employee ID</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Employee ID"
+          formControlName="idEmployee" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Name"
+          formControlName="name"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          placeholder="Hexaware email"
+          formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Main Role</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Main Role"
+          formControlName="mainRole"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="livingCountry">
+          <mat-option [value]="null">Select an option</mat-option>
+          <mat-option
+            *ngFor="let country of countries"
+            [value]="country.code">
+            {{ country.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="employeeFormGroup.get('livingCountry').valid">
+        <mat-label>Work Location</mat-label>
+        <mat-select formControlName="workLocation">
+          <mat-option [value]="null">Select an option</mat-option>
+          <mat-option
+            *ngFor="let location of getWorkLocations(employeeFormGroup.get('livingCountry').value)"
+            [value]="location.code">
+            {{ location.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>City</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="City"
+          formControlName="livingCity"/>
+      </mat-form-field>
+    </div>
+
+    <div class="pwd-data" formGroupName="pwdData">
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          placeholder="Password"
+          formControlName="password" />
+      </mat-form-field>
+
+      <mat-hint
+        *ngIf="form.get('pwdData').get('password').hasError('minlength')">
+        {{ 'Password must be at least 6 characters long' }}
+      </mat-hint>
+
+      <mat-form-field>
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          type="password"
+          placeholder="Confirm password"
+          formControlName="pwdConfirm" />
+      </mat-form-field>
+
+      <mat-hint
+        *ngIf="form.get('pwdData').hasError('passwordsNotTheSame')">
+        {{ form.get('pwdData').getError('passwordsNotTheSame').message }}
+      </mat-hint>
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!form.valid">
+      Register
+    </button>
+
+    <button
+      mat-button
+      color="primary"
+      type="button"
+      [routerLink]="['/sign-in']">
+      Go Back
+    </button>
+  </form>
+</div>

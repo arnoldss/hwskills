@@ -1,0 +1,384 @@
+<div class="flexContainer">
+
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (ngModelChange)="applyFilter($event)" placeholder="Ex. Angular" [ngModel]="globalFilter">
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="idEmployee">
+        <th mat-header-cell *matHeaderCellDef> idEmployee. </th>
+        <td mat-cell *matCellDef="let element"> {{element.idEmployee}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>
+
+          <div>
+            <mat-form-field>
+              <input matInput class="form-field" [formControl]="nameFilter" placeholder="Name Filter">
+            </mat-form-field>
+          </div>
+
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="city">
+        <th mat-header-cell *matHeaderCellDef> city
+
+          <div>
+            <mat-form-field>
+              <input matInput class="form-field" [formControl]="cityFilter" placeholder="City Filter">
+            </mat-form-field>
+          </div>
+
+
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.livingCity}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="country">
+        <th mat-header-cell *matHeaderCellDef> country </th>
+        <td mat-cell *matCellDef="let element"> {{element.livingCountry}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="mainRole">
+        <th mat-header-cell *matHeaderCellDef> mainRole </th>
+        <td mat-cell *matCellDef="let element"> {{element.mainRole}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="school">
+        <th mat-header-cell *matHeaderCellDef> school </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngFor="let school of element.school; let i = index">
+            {{school.name}}
+
+
+          </div>
+
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="skills">
+        <th mat-header-cell *matHeaderCellDef> skills </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngFor="let skills of element.skills; let i = index">
+            {{skills.name }} ,
+          </div>
+
+
+
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="projects">
+        <th mat-header-cell *matHeaderCellDef> projects </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngFor="let project of element.projects; let i = index">
+            {{project.customer }} ,
+          </div>
+
+
+
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Delete</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="onEmployeeDelete(element)">
+            Delete
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectEmployee(row)"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+</div>
+<!--Add row-->
+
+<div class="flexContainer">
+  <mat-tab-group class="groupTabs"
+  [selectedIndex]="selected"
+               (selectedIndexChange)="change($event)"
+  >
+    <mat-tab label="Add">
+
+      <div class="flexContainerAddDeep">
+
+        <div class="register-container">
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="employee-data" formGroupName="employee">
+              <mat-form-field>
+                <mat-label>Employee ID</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  placeholder="Employee ID"
+                  formControlName="idEmployee" />
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Name"
+                  formControlName="name"/>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Hexaware email"
+                  formControlName="email" />
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Main Role</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Main Role"
+                  formControlName="mainRole"/>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Country</mat-label>
+                <mat-select formControlName="livingCountry">
+                  <mat-option [value]="null">Select an option</mat-option>
+                  <mat-option
+                    *ngFor="let country of countries"
+                    [value]="country.code">
+                    {{ country.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field *ngIf="employeeFormGroup.get('livingCountry').valid">
+                <mat-label>Work Location</mat-label>
+                <mat-select formControlName="workLocation">
+                  <mat-option [value]="null">Select an option</mat-option>
+                  <mat-option
+                    *ngFor="let location of getWorkLocations(employeeFormGroup.get('livingCountry').value)"
+                    [value]="location.code">
+                    {{ location.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>City</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="City"
+                  formControlName="livingCity"/>
+              </mat-form-field>
+            </div>
+
+            <div class="pwd-data" formGroupName="pwdData">
+              <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Password"
+                  formControlName="password" />
+              </mat-form-field>
+
+              <mat-hint
+                *ngIf="form.get('pwdData').get('password').hasError('minlength')">
+                {{ 'Password must be at least 6 characters long' }}
+              </mat-hint>
+
+              <mat-form-field>
+                <mat-label>Confirm Password</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Confirm password"
+                  formControlName="pwdConfirm" />
+              </mat-form-field>
+
+              <mat-hint
+                *ngIf="form.get('pwdData').hasError('passwordsNotTheSame')">
+                {{ form.get('pwdData').getError('passwordsNotTheSame').message }}
+              </mat-hint>
+            </div>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!form.valid">
+              Register
+            </button>
+
+
+          </form>
+
+
+      </div>
+      </div>
+
+
+    </mat-tab>
+
+
+
+    <mat-tab label="Edit">
+
+
+      <!--Edit Row-->
+      <div class="flexContainerAddDeep">
+
+        <div class="profile-container">
+
+        <div class="skill-form">
+          <div class="form-container">
+            <h1>Skills</h1>
+            <form
+              [formGroup]="skillForm"
+              (ngSubmit)="onAddSkill()">
+              <mat-form-field>
+                <mat-label>Skill Name</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Skill Name"
+                  formControlName="name"
+                />
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Skill Area</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Skill Area"
+                  formControlName="area"
+                />
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!skillForm.valid">
+                Add Skill
+              </button>
+            </form>
+          </div>
+          <div class="skills-container">
+            <mat-card *ngFor="let skill of editEmployee?.skills; let i = index">
+              <mat-card-header>
+                <mat-card-title>{{ skill.name }}</mat-card-title>
+                <mat-card-subtitle>{{ skill.area }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions>
+                <button mat-button (click)="onSkillDelete(i)">Delete</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+
+
+        <div class="project-form">
+          <div class="form-container">
+            <h1>Projects</h1>
+            <form [formGroup]="projectForm" (ngSubmit)="onProjectSubmit()">
+              <mat-form-field>
+                <mat-label>Customer</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Customer Name"
+                  formControlName="customer"
+                />
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Initial Date</mat-label>
+                <input
+                  disabled
+                  matInput
+                  [matDatepicker]="initDatePicker"
+                  formControlName="initialDate">
+                <mat-datepicker-toggle matSuffix [for]="initDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #initDatePicker disabled="false" touchUi="true"></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Completion Date</mat-label>
+                <input
+                  disabled
+                  matInput
+                  [matDatepicker]="completionDatePicker"
+                  formControlName="completionDate">
+                <mat-datepicker-toggle matSuffix [for]="completionDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #completionDatePicker disabled="false" touchUi="true"></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Role</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Role"
+                  formControlName="role"
+                />
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!projectForm.valid">
+                Add Project
+              </button>
+            </form>
+          </div>
+          <div class="projects-container">
+            <mat-card *ngFor="let project of editEmployee?.projects; let i = index">
+              <mat-card-header>
+                <mat-card-title>{{ project.customer }}</mat-card-title>
+                <mat-card-subtitle>
+                  {{ (project.initialDate | date:'mediumDate') + ' | ' + (project.completionDate | date:'mediumDate') }}
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions>
+                <button mat-button (click)="onProjectDelete(i)">Delete</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

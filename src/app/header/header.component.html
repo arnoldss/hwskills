@@ -1,0 +1,28 @@
+<header>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>Hexaware Skills</span>
+      <span class="spacer"></span>
+
+      <button
+        *ngIf="isAdmin === true"
+        mat-button
+        type="button"
+        [routerLink]="['/admin']">Admin Panel</button>
+
+      <button
+        *ngIf="user | async"
+        mat-button
+        type="button"
+        [routerLink]="['/employee']">
+        Profile
+      </button>
+
+      <button
+        *ngIf="user | async"
+        mat-button
+        type="button"
+        (click)="signOut()">Logout</button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</header>
